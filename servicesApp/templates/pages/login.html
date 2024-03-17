@@ -1,0 +1,113 @@
+{% extends 'commons/base.html' %}
+
+{% block title %}Home - Your Site{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <h1 class="display-1 text-white animated slideInDown">Login</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase mb-0">
+                <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                <li class="breadcrumb-item text-primary active" aria-current="page">Login</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="d-flex flex-column justify-content-between h-100">
+                    <div class="bg-light d-flex align-items-center w-100 p-4 mb-4">
+                        <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-dark" style="width: 55px; height: 55px;">
+                            <i class="fa fa-map-marker-alt text-primary"></i>
+                        </div>
+                        <div class="ms-4">
+                            <p class="mb-2">Address</p>
+                            <h3 class="mb-0">123 Street, New York, USA</h3>
+                        </div>
+                    </div>
+                    <div class="bg-light d-flex align-items-center w-100 p-4 mb-4">
+                        <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-dark" style="width: 55px; height: 55px;">
+                            <i class="fa fa-phone-alt text-primary"></i>
+                        </div>
+                        <div class="ms-4">
+                            <p class="mb-2">Call Us Now</p>
+                            <h3 class="mb-0">+012 345 6789</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+                {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+                <form id="register-form" method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        {% for field in form %}
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                {{ field }}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <div id="{{ field.auto_id }}-error" class="text-danger"></div> <!-- Error message placeholder -->
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="col-12">
+                            <button id="register-button" class="btn btn-primary w-100 py-3" type="submit">login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+        $("#register-form").submit(function(event) {
+            event.preventDefault(); // Prevent default form submission behavior
+    
+            $.ajax({
+                type: "POST",
+                url: "{% url 'login' %}",
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        // Redirect to profile page
+                        window.location.href = "{% url 'profile' %}";
+                    } else if (response.errors) {
+                        // Clear previous error messages
+                        $(".text-danger").empty();
+                        // Display errors for each field
+                        $.each(response.errors, function(field_id, error_msgs) {
+                            $("#"+"id_"+field_id+ "-error").text(error_msgs.join(" "));
+                        });
+                    }
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    // Display error message under each field
+                    $(".text-danger").empty(); // Clear previous error messages
+                    
+                    $.each(xhr.responseJSON.errors, function(field_id, error_msgs) {
+                        $("#"+"id_"+field_id+ "-error").text(error_msgs.join(" "));
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+
+{% endblock %}

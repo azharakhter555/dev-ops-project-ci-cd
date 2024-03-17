@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Your Site{% endblock %}</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    
+    {% comment %} cdn of the google fonts {% endcomment %}
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    {% comment %} Links to the folders inside the static folder inside the app it contain fils of css of libarary{% endcomment %}
+     <link href="{% static 'servicesApp/lib/animate/animate.min.css' %}" rel="stylesheet">
+     <link href="{% static 'servicesApp/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+     <link href="{% static 'servicesApp/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet">
+     <link href="{% static 'servicesApp/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'servicesApp/css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+    {% comment %} Spiner component include{% endcomment %}
+    {% include './spiner.html' %}
+    
+    {% comment %} Header Componet include {% endcomment %}
+    {% include './header.html' %}
+
+    {% comment %} block of other pages inside this main  {% endcomment %}
+    <main>
+        {% block content %}
+        <!-- Content specific to child templates -->
+        {% endblock %}
+    </main>
+    {% comment %} Footer component include {% endcomment %}
+    {% include './footer.html' %}
+
+
+    {% comment %} All the libraries files are download and kept in the inside the app => static folders {% endcomment %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'servicesApp/lib/wow/wow.min.js' %}"></script>
+<script src="{% static 'servicesApp/lib/easing/easing.min.js' %}"></script>
+<script src="{% static 'servicesApp/lib/waypoints/waypoints.min.js' %}"></script>
+<script src="{% static 'servicesApp/lib/counterup/counterup.min.js' %}"></script>
+<script src="{% static 'servicesApp/lib/owlcarousel/owl.carousel.min.js' %}"></script>
+<script src="{% static 'servicesApp/lib/tempusdominus/js/moment.min.js' %}"></script>
+<script src="{% static 'servicesApp/lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
+<script src="{% static 'servicesApp/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<script src="{% static 'servicesApp/js/main.js' %}"></script>
+
+</body>
+</html>

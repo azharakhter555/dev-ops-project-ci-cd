@@ -1,0 +1,410 @@
+{% extends 'commons/base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <h1 class="display-1 text-white animated slideInDown">
+            Welcome Back, {{ user.full_name }} 
+        </h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase mb-0">
+                <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                <li class="breadcrumb-item text-primary active" aria-current="page">Profile</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+
+<div class="container-xxl project py-5">
+    <div class="container">
+        <div class="row g-4 wow fadeInUp" data-wow-delay="0.3s">
+            <div class="col-lg-10">
+                <div class="nav nav-pills justify-content-between w-100 h-100 me-4" role="tablist">
+                    <button class="nav-link d-flex align-items-center text-start p-3 mb-3 active" data-bs-toggle="pill" data-bs-target="#tab-pane-1" type="button" role="tab">
+                        <h3 class="m-0">Your Services</h3>
+                    </button>
+                    <button class="nav-link d-flex align-items-center text-start p-3 mb-3" data-bs-toggle="pill" data-bs-target="#tab-pane-2" type="button" role="tab">
+                        <h3 class="m-0">Upload New Service</h3>
+                    </button>
+                    <button class="nav-link d-flex align-items-center text-start p-3 mb-3" data-bs-toggle="pill" data-bs-target="#tab-pane-3" type="button" role="tab">
+                        <h3 class="m-0">People Requests</h3>
+                    </button>
+                
+
+                </div>
+            </div>
+            
+            <div class="col-lg-12">
+                <div class="show-message"></div>
+                <div class="tab-content w-100">
+                    <div class="tab-pane fade show active" id="tab-pane-1">
+                       
+                        <div class="container-xxl py-5">
+                            <div class="container">
+                                <div class="row g-0 team-items">
+                                    {% for service_post in user_service_posts %}
+                                    <div class="col-lg-4 col-md-6 wow fadeInUp shadow" data-wow-delay="0.1s">
+                                        <div class="team-item position-relative">
+                                            <div class="position-relative">
+                                                {% if service_post.service_img %}
+                                                <img class="img-fluid" src="{{ service_post.service_img.url }}" alt="Uploaded Image" width="400">
+                                            {% else %}
+                                                <img class="img-fluid" src="{% static 'servicesApp/img/team-1.jpg' %}" alt="" width="400">
+                                            {% endif %}
+                                                <div class="team-social text-center">
+                                                    <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
+                                                    <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
+                                                </div>
+                                            </div>
+                                            <div class="bg-light text-center p-2">
+                                                
+                                                <h3 class="mt-2">Name:{{ service_post.name }}</h3>
+                                                <p class="text-primary">Category: {{ service_post.category_name }}</p>
+                                                <p class="text-primary">Experience:{{ service_post.experience }}</p> 
+                                                <p class="text-primary">Available_date:{{ service_post.available_date }}</p>
+
+                                                <p class="text-primary">{{ service_post.email }}</p>
+                                                
+                                                <p class="text-primary">Contact:{{ service_post.contact_number }}</p>
+
+                                                <p class="text-primary">Per Hour Rate:{{ service_post.per_hour_rate }}</p>
+                                                
+                                                <span>
+                                                    <button type="button" class="btn btn-primary py-3 px-5 animated slideInLeft" data-service-post-id="{{ service_post.id }}" data-bs-toggle="modal" data-bs-target="#hireModal">Edit</button>
+                                                    <button type="button" class="btn btn-primary py-3 px-5 animated slideInLeft delete-btn " data-post-id="{{ service_post.id }}">Delete</button>         
+                                                </span>
+                                           
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                    <div class="tab-pane fade" id="tab-pane-2">
+                        <div class="container-xxl py-5 "> <!-- Added shadow-bg class -->
+                            <div class="container ">
+                                <div class="row justify-content-center g-5 shadow"> <!-- Center the row -->
+                                    <div class="col-lg-8 wow" data-wow-delay="0.2s"> <!-- Adjust the column width -->
+                                        <div class="alert alert-success success-message" style="display: none;"></div>
+                                        <form id="register-form" method="post" enctype="multipart/form-data" novalidate>
+                                            {% csrf_token %}
+                                            <div class="row g-3">
+                                                {% for field in form %}
+                                                <div class="col-md-6"> <!-- Set the input field width to 50% -->
+                                                    <div class="form-floating">
+                                                        {% if field.name == 'service_img' %}
+                                                        <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" accept="image/*" required>
+                                                        {% else %}
+                                                        {{ field }}
+                                                        {% endif %}
+                                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                                        <div id="{{ field.auto_id }}-error" class="text-danger"></div> <!-- Error message placeholder -->
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                                <p class="show"></p>
+                                                <div class="col-12">
+                                                    <button id="register-button" class="btn btn-primary w-100 py-3" type="submit">Upload Services</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="tab-pane fade" id="tab-pane-3">
+                        <div class="container-xxl py-5">
+                            <div class="container">
+                                <div class="row g-4">
+                                    {% for booking_user in BookingUser %}
+                                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                                        <div class="service-item d-flex position-relative text-center h-100">
+                                            <div class="service-text p-5">
+                                                <h3 class="mb-3">{{ booking_user.name }}</h3>
+                                                <p class="mb-4">Email: {{ booking_user.email }}</p>
+                                                <p class="mb-4">Contact: {{ booking_user.contact_number }}</p>                                            
+                                                <p class="mb-4">Description: {{ booking_user.other_description }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this service post?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="hireModal" tabindex="-1" aria-labelledby="hireModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hireModalLabel">Update Your POST</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm"  method="post" enctype="multipart/form-data"  novalidate>
+                    <div class="row g-3">
+                        {% csrf_token %}
+                        {% for form in formUpadte %}
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                {% if form.name == 'service_img' %}
+                                <input type="file" name="{{ form.name }}" id="{{ form.id_for_label }}" accept="image/*" required>
+                                {% else %}
+                                <input type="text" class="form-control" name="{{ form.name }}" id="{{ form.id_for_label }}" placeholder="{{ form.label }}" required>
+                                {% endif %}
+                                <label for="{{ form.id_for_label }}">{{ form.label }}</label>
+                                <div id="{{ form.auto_id }}-error" class="text-danger"></div> <!-- Error message placeholder -->
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <p class="show"></p>
+                        <div class="col-12">
+                            <button id="confirmUpdateBtn" class="btn btn-primary w-100 py-3" type="submit">Update Services</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script>
+    function populateFormFields(response) {
+
+        $('#id_id_edit').prop('type', 'hidden');
+        $('#id_id_edit').val(response.id);
+        $('#id_name_edit').val(response.name);
+        $('#id_category_edit').val(response.category_name);
+        $('#id_description_edit').val(response.description);
+        $('#id_experience_edit').val(response.experience);
+        // Convert the available_date string to a Date object
+        var availableDate = new Date(response.available_date);
+        // Format the date for the input field (assuming it's a datetime-local input)
+        var formattedAvailableDate = availableDate.getFullYear() + '-' + ("0" + (availableDate.getMonth() + 1)).slice(-2) + '-' + ("0" + availableDate.getDate()).slice(-2);
+
+        console.log("formattedAvailableDate",formattedAvailableDate);
+        $('#id_available_date_edit').val(formattedAvailableDate);
+        $('#id_email_edit').val(response.email);
+
+        $('#id_contact_number_edit').val(response.contact_number);
+        $('#id_per_hour_rate_edit').val(response.per_hour_rate);
+    
+        // Display the modal
+        $('#hireModal').modal('show');
+    }
+
+  
+
+    $(document).ready(function() {
+
+        $('[data-bs-target="#hireModal"]').on('click', function() {
+            // Get the service_post ID from the button's data attribute
+                    // Get the service_post ID from the button's data attribute
+        var servicePostId = $(this).data('service-post-id');
+
+            // Make an AJAX request to fetch the service post data
+            $.ajax({
+                url: "{% url 'get_post' %}", // Replace with your API endpoint URL
+                method: 'GET',
+                data: {
+                    service_post_id: servicePostId
+                },
+                success: function(response) {
+                    populateFormFields(response);
+                   
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error('Error fetching service post data:', error);
+                }
+            });
+        });
+
+
+
+        $(".delete-btn").click(function() {
+            
+            var postId = $(this).data("post-id");
+            $("#confirmDeleteBtn").data("post-id", postId);
+            $("#deleteConfirmationModal").modal("show");
+        });
+
+
+
+        $("#register-form").submit(function(event) {
+            event.preventDefault(); // Prevent default form submission behavior
+            
+    
+            var formData = new FormData(this);
+    
+            $.ajax({
+                type: "POST",
+                url: "{% url 'add_post' %}",
+                data: formData,
+                processData: false,  // Prevent jQuery from processing the data
+                contentType: false,  // Prevent jQuery from setting contentType
+                success: function(response) {
+                    if (response.success) {
+                        // Display success message
+                        $('.success-message').html(response.message).show();
+             
+                        // Clear the form fields
+                        $('#register-form')[0].reset();
+                    } else if (response.errors) {
+                        console.log("gerer33333")
+                        // Display field-specific errors
+                        $(".text-danger").empty();
+                        // Display errors for each field
+                        $.each(response.errors, function(field_id, error_msgs) {
+                            $("#"+"id_"+field_id+ "-error").text(error_msgs.join(" "));
+                        });
+                    } else if (response.error) {
+        
+                        // Display non-field errors
+                        $('.show').html('<div class="alert alert-danger">' + response.error + '</div>');
+                    }
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    // Display error message
+                    $(".text-danger").empty(); // Clear previous error messages
+                
+                    $.each(xhr.responseJSON.errors, function(field_id, error_msgs) {
+                        $("#"+"id_"+field_id+ "-error").text(error_msgs.join(" "));
+                    });
+                }
+            });
+        });
+        
+
+        $("#confirmDeleteBtn").click(function() {
+            var postId = $(this).data("post-id");
+            $.ajax({
+                type: "POST",
+                url: "{% url 'delete_post' %}",
+                data: {
+                    post_id: postId,
+                    csrfmiddlewaretoken: "{{ csrf_token }}"
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Remove the deleted service post from the UI
+                        $("#post-" + postId).remove();
+                        // Show success message
+                        $(".show-message").text("Service post deleted successfully").removeClass("text-danger").addClass("text-success");
+                        location.reload();
+                            
+                    } else {
+                        // Show error message
+                        $(".show-message").text("Error deleting service post").removeClass("text-success").addClass("text-danger");
+                    }
+                    // Close the confirmation modal
+                    $("#deleteConfirmationModal").modal("hide");
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.error("Error deleting service post:", errorThrown);
+                    // Show error message
+                    $(".show-message").text("Error deleting service post").removeClass("text-success").addClass("text-danger");
+                }
+            });
+        });
+
+        $('#confirmUpdateBtn').click(function(event) {
+            event.preventDefault();
+            
+            var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+            var formData = new FormData();  // Create FormData object for handling file uploads
+        
+            // Append form values to FormData object
+            formData.append('id', $('#id_id_edit').val());
+            formData.append('name', $('#id_name_edit').val());
+            formData.append('category_name', $('#id_category_edit').val());
+            formData.append('description', $('#id_description_edit').val());
+            formData.append('experience', $('#id_experience_edit').val());
+            formData.append('available_date', $('#id_available_date_edit').val());
+            formData.append('email', $('#id_email_edit').val());
+            formData.append('contact_number', $('#id_contact_number_edit').val());
+            formData.append('per_hour_rate', $('#id_per_hour_rate_edit').val());
+            formData.append('service_img', $('#id_service_img_edit')[0].files[0]);  // Append file
+        
+            // Send AJAX request
+            $.ajax({
+                type: "POST",
+                url: "{% url 'update_service_post' %}",
+                processData: false,  // Prevent jQuery from processing the data
+                contentType: false,  // Set content type to false for file uploads
+                data: formData,  // Send FormData object directly
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken); // Set CSRF token in request headers
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert("Service post updated successfully");
+                        $('#hireModal').modal('hide');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        console.log("Error updating service post:", response.error);
+                    }
+                },
+                error: function(xhr, status, errorThrown) {
+                    alert("Error updating service post: " + errorThrown);
+                }
+            });
+        });
+        
+        
+
+        
+    });
+</script>
+
+
+{% endblock %}

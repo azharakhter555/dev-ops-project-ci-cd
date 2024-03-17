@@ -1,0 +1,219 @@
+{% extends 'commons/base.html' %}
+{% load static %}
+{% block title %}Home - Your Site{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0 pb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="owl-carousel header-carousel position-relative">
+        <div class="owl-carousel-item position-relative" data-dot="<img src='{% static 'servicesApp/img/carousel-1.jpg' %}'>">
+            <img class="img-fluid" src="{% static 'servicesApp/img/carousel-1.jpg' %}" alt="">
+            <div class="owl-carousel-inner">
+                <div class="container">
+                    <div class="row justify-content-start">
+                        <div class="col-10 col-lg-8">
+                            <h1 class="display-1 text-white animated slideInDown">Best Architecture And Interior Design Services</h1>
+                            <p class="fs-5 fw-medium text-white mb-4 pb-3">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
+                            <a href="" class="btn btn-primary py-3 px-5 animated slideInLeft">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="owl-carousel-item position-relative" data-dot="<img src='{% static 'servicesApp/img/carousel-2.jpg' %}'>">
+            <img class="img-fluid" src="{% static 'servicesApp/img/carousel-2.jpg' %}" alt="">
+            <div class="owl-carousel-inner">
+                <div class="container">
+                    <div class="row justify-content-start">
+                        <div class="col-10 col-lg-8">
+                            <h1 class="display-1 text-white animated slideInDown">Best Architecture And Interior Design Services</h1>
+                            <p class="fs-5 fw-medium text-white mb-4 pb-3">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
+                            <a href="" class="btn btn-primary py-3 px-5 animated slideInLeft">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="owl-carousel-item position-relative" data-dot="<img src='{% static 'servicesApp/img/carousel-3.jpg' %}'>">
+            <img class="img-fluid" src="{% static 'servicesApp/img/carousel-3.jpg' %}" alt="">
+            <div class="owl-carousel-inner">
+                <div class="container">
+                    <div class="row justify-content-start">
+                        <div class="col-10 col-lg-8">
+                            <h1 class="display-1 text-white animated slideInDown">Best Architecture And Interior Design Services</h1>
+                            <p class="fs-5 fw-medium text-white mb-4 pb-3">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
+                            <a href="" class="btn btn-primary py-3 px-5 animated slideInLeft">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% comment %} event show cards {% endcomment %}
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+            <h4 class="section-title">Our Upcomming Events</h4>
+            <h1 class="display-5 mb-4">Ready to enjoy and buy tickets for the Events </h1>
+        </div>
+        <div class="row g-0 team-items">
+            {% for service_post in user_service_posts %}
+            <div class="col-lg-3 col-md-6 wow fadeInUp shadow" data-wow-delay="0.1s">
+                <div class="team-item position-relative">
+                    <div class="position-relative">
+                        <img class="img-fluid" src="{% static 'servicesApp/img/team-1.jpg' %}" alt="" width="400">
+                        <div class="team-social text-center">
+                            <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="bg-light text-center p-2">
+                        
+                        <h3 class="mt-2">Name:{{ service_post.name }}</h3>
+                        <p class="text-primary">Category: {{ service_post.category_name }}</p>
+                        <p class="text-primary">Experience:{{ service_post.experience }}</p> 
+                        <p class="text-primary">Available_date:{{ service_post.available_date }}</p>
+
+                        <p class="text-primary">{{ service_post.email }}</p>
+                        
+                        <p class="text-primary">Contact:{{ service_post.contact_number }}</p>
+
+                        <p class="text-primary">Per Hour Rate:{{ service_post.per_hour_rate }}</p>
+                        
+                        <span>
+                            <button type="button" class="btn btn-primary py-3 px-5 animated slideInLeft delete-btn " data-user-id="{{service_post.user_id}}" data-post-id="{{ service_post.id }}">Hire Me</button>         
+                        </span>
+                   
+                    </div>
+                </div>
+            </div>
+            
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Book Service Provider</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm" novalidate>
+                    <div class="row g-3">
+                        {% csrf_token %}
+                        {% for form in form %}
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                {% if form.name == 'service_img' %}
+                                <input type="file" name="{{ form.name }}" id="{{ form.id_for_label }}" accept="image/*" required>
+                                {% else %}
+                                <input type="text" class="form-control" name="{{ form.name }}" id="{{ form.id_for_label }}" placeholder="{{ form.label }}" required>
+                                {% endif %}
+                                <label for="{{ form.id_for_label }}">{{ form.label }}</label>
+                                <div id="{{ form.auto_id }}-error" class="text-danger"></div> <!-- Error message placeholder -->
+                            </div>
+                        </div>
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div id="{{ field.auto_id }}-error" class="text-danger"></div>
+                        {% endfor %}
+                      
+                        <p class="show-message"></p>
+                        <div class="col-12">
+                            <button id="confirmDeleteBtn" class="btn btn-primary w-100 py-3" type="submit">Hire Now</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script>
+   
+  
+
+    $(document).ready(function() {
+
+      
+
+
+        $(".delete-btn").click(function(event) {
+            event.preventDefault(); 
+            var postId = $(this).data("post-id");
+            var userId = $(this).data("user-id");
+            console.log("post",postId,"user",userId);
+            $("#confirmDeleteBtn").data("post-id", postId).data("user-id", userId);
+            $("#deleteConfirmationModal").modal("show");
+        });
+
+        $("#confirmDeleteBtn").click(function(event) {
+            event.preventDefault(); // Prevent default behavior
+            var postId = $(this).data("post-id");
+            var userId = $(this).data("user-id");
+            var postData = {
+                // Add necessary data fields for creating a new service post
+                service_post_id: postId,
+                user_id: userId,
+                name: $("#id_name").val(),
+                other_description: $("#id_other_description").val(),
+                email: $("#id_email").val(),
+                contact_number: $("#id_contact_number").val(),
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            };
+            $.ajax({
+                type: "POST",
+                url: "{% url 'index' %}",
+                data: postData,
+                success: function(response) {
+                    if (response.success) {
+                        // Remove the deleted service post from the UI
+                        // Show success message
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        $.each(response.errors, function(field_id, error_msgs) {
+                            $("#" + field_id + "-error").text(error_msgs.join(" "));
+                        });
+                    }
+                    // Close the confirmation modal
+                    $("#deleteConfirmationModal").modal("hide");
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.error("Error deleting service post:", errorThrown);
+                    var response = xhr.responseJSON;  // Access the response JSON
+                    if (response) {
+                        $.each(response.errors, function(field_id, error_msgs) {
+                            if (Array.isArray(error_msgs)) {
+                                $("#" + field_id + "-error").text(error_msgs.join(" "));
+                            } else {
+                                $("#" + field_id + "-error").text(error_msgs);
+                            }
+                        });
+                    } else {
+                        $(".show-message").text("Error deleting service post").removeClass("text-success").addClass("text-danger");
+                    }
+                }
+            });
+        });
+        
+
+        
+    });
+</script>
+
+{% endblock %}
