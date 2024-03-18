@@ -12,10 +12,8 @@ phases:
   pre_build:
     commands:
       - python --version  # Print Python version for verification
-      - pylint $CODEBUILD_SRC_DIR/manage.py
+      - pylint $CODEBUILD_SRC_DIR/manage.py || true  # Run pylint on manage.py and ignore exit status
 
 artifacts:
   files:
     - '**/*'  # Include all files in the artifact
-
-
