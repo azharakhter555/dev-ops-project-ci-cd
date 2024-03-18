@@ -12,7 +12,8 @@ phases:
   pre_build:
     commands:
       - python --version  # Print Python version for verification
-      - pylint $CODEBUILD_SRC_DIR/*.py  # Run pylint on Python files in the project root director
+      - pylint $CODEBUILD_SRC_DIR/**/*.py
+
 
 artifacts:
   files:
