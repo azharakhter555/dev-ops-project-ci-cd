@@ -12,9 +12,11 @@ phases:
   pre_build:
     commands:
       - python --version  # Print Python version for verification
-      - pylint $CODEBUILD_SRC_DIR/servicesApp*.py  # Run pylint on Python files in the project root directory
+      - pylint $CODEBUILD_SRC_DIR/*.py  # Run pylint on Python files in the project root directory
       - pylint $CODEBUILD_SRC_DIR/servicesApp/*.py  # Run pylint on Python files in the 'servicesApp' directory
 
 artifacts:
   files:
     - '**/*'  # Include all files in the artifact
+
+
