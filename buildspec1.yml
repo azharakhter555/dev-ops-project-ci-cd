@@ -20,8 +20,8 @@ phases:
   build:
     commands:
       - sonar-scanner \
-          -Dsonar.organization=azharakhter556 \
-          -Dsonar.projectKey=azharakhter556_dev-ops-project \
+          -Dsonar.organization=azharakhter555 \
+          -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd \
           -Dsonar.sources=. \
           -Dsonar.host.url=https://sonarcloud.io
       - sleep 5
