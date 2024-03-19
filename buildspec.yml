@@ -1,5 +1,12 @@
 version: 0.2
 
+env:
+  variables:
+    Project: "azharakhter555"
+    Organization: "azharakhter555"
+    HOST: "https://sonarcloud.io"
+    LOGIN: "dfb96a75ff67413791f60ca1b049976beccfaec6"
+
 phases:
   install:
     runtime-versions:
@@ -18,7 +25,7 @@ phases:
       - pylint $CODEBUILD_SRC_DIR/manage.py || true  # Run pylint on manage.py and ignore exit status
 
   build:
-    commands:  # Corrected indentation
+    commands:
       - |
         if [ -z "$Project" ]; then
             echo "Error: SonarCloud project key not found."
