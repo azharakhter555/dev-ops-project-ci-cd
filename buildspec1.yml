@@ -10,7 +10,7 @@ env:
 phases:
   install:
     runtime-versions:
-      java: openjdk8
+      java: corretto17
     commands:
       - apt-get update
       - apt-get install -y jq
