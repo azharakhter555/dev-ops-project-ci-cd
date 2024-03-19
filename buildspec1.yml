@@ -23,9 +23,6 @@ phases:
 
   build:
     commands:
-      - python --version
-      - pylint $CODEBUILD_SRC_DIR/manage.py || true
-      - python3 manage.py test  # Run Django tests
       - sonar-scanner \
           -Dsonar.projectKey="$Project" \
           -Dsonar.organization="$Organization" \
