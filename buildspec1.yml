@@ -21,6 +21,8 @@ phases:
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
       - chmod +x sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner  # Adjust permissions
       - export PATH=$PATH:$(pwd)/sonar-scanner-cli-4.6.2.2472-linux/bin/  # Adjust path
+      - ls -la  # List contents of the directory for debugging
+      - cd ..  # Return to the previous directory
 
   build:
     commands:
