@@ -18,31 +18,32 @@ phases:
       - pylint $CODEBUILD_SRC_DIR/manage.py || true  # Run pylint on manage.py and ignore exit status
 
   build:
-  commands:
-    - |
-      if [ -z "$Project" ]; then
-          echo "Error: SonarCloud project key not found."
-          exit 1
-      fi
-      if [ -z "$Organization" ]; then
-          echo "Error: SonarCloud organization key not found."
-          exit 1
-      fi
-      if [ -z "$HOST" ]; then
-          echo "Error: SonarCloud host URL not found."
-          exit 1
-      fi
-      if [ -z "$LOGIN" ]; then
-          echo "Error: SonarCloud login token not found."
-          exit 1
-      fi
-      
-      sonar-scanner \
-          -Dsonar.projectKey="$Project" \
-          -Dsonar.organization="$Organization" \
-          -Dsonar.host.url="$HOST" \
-          -Dsonar.login="$LOGIN" \
-          -X  # Verbose output for debugging purposes
+    commands:  # Corrected indentation
+      - |
+        if [ -z "$Project" ]; then
+            echo "Error: SonarCloud project key not found."
+            exit 1
+        fi
+        if [ -z "$Organization" ]; then
+            echo "Error: SonarCloud organization key not found."
+            exit 1
+        fi
+        if [ -z "$HOST" ]; then
+            echo "Error: SonarCloud host URL not found."
+            exit 1
+        fi
+        if [ -z "$LOGIN" ]; then
+            echo "Error: SonarCloud login token not found."
+            exit 1
+        fi
+        
+        sonar-scanner \
+            -Dsonar.projectKey="$Project" \
+            -Dsonar.organization="$Organization" \
+            -Dsonar.host.url="$HOST" \
+            -Dsonar.login="$LOGIN" \
+            -X  # Verbose output for debugging purposes
+
 artifacts:
   files:
     - '**/*'  # Include all files in the artifact
