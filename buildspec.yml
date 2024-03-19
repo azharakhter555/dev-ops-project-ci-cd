@@ -1,13 +1,20 @@
 version: 0.2
 
+env:
+  variables:
+    Project: "azharakhter555"  # Replace "azharakhter555" with your actual project key
+    Organization: "azharakhter555"  # Replace "azharakhter555" with your actual organization key
+    HOST: "https://sonarcloud.io"  # Replace "https://sonarcloud.io" with your SonarCloud host URL
+    LOGIN: "dfb96a75ff67413791f60ca1b049976beccfaec6"  # Replace "dfb96a75ff67413791f60ca1b049976beccfaec6" with your actual login token
+
 phases:
   install:
     runtime-versions:
       python: 3.11
     commands:
       - pip install --upgrade pip
-      - pip install -r requirements.txt
-      - pip install pylint
+      - pip install -r requirements.txt  # Install project dependencies
+      - pip install pylint  # Install pylint for static code analysis
       # Check if Sonar Scanner is installed, if not, download and install it
       - if [ ! -x "$(command -v sonar-scanner)" ]; then
           wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip &&
@@ -17,8 +24,8 @@ phases:
 
   pre_build:
     commands:
-      - python --version
-      - pylint $CODEBUILD_SRC_DIR/manage.py || true
+      - python --version  # Print Python version for verification
+      - pylint $CODEBUILD_SRC_DIR/manage.py || true  # Run pylint on manage.py and ignore exit status
 
   build:
     commands:
@@ -46,3 +53,7 @@ phases:
             -Dsonar.host.url="$HOST" \
             -Dsonar.login="$LOGIN" \
             -X
+
+artifacts:
+  files:
+    - '**/*'  # Include all files in the artifact
