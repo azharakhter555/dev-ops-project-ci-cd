@@ -19,7 +19,8 @@ phases:
       - pip install pylint
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-      - export PATH=$PATH:$(pwd)/sonar-scanner-cli-4.6.2.2472-linux/bin/
+      - chmod +x sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner  # Adjust permissions
+      - export PATH=$PATH:$(pwd)/sonar-scanner-cli-4.6.2.2472-linux/bin/  # Adjust path
 
   build:
     commands:
@@ -31,7 +32,7 @@ phases:
       - sleep 5
       - curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project" > result.json
       - cat result.json
-      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ]; then exit 1; fi  # Fail build if quality gate status is ERROR
+      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ]; then exit 1; fi
 
 artifacts:
   files:
