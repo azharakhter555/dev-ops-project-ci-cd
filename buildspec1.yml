@@ -1,8 +1,9 @@
 version: 0.2
+
 env:
   secrets-manager:
     LOGIN: prod/sonar-azhar:sonarToken
-    HOST: prod/sonar-azhar:Host
+    HOST: prod/sonar-azhar:HOST
     Organization: prod/sonar-azhar:Organization
     Project: prod/sonar-azhar:Project
 
@@ -28,6 +29,7 @@ phases:
       - curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project" > result.json
       - cat result.json
       - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ]; then $CODEBUILD_BUILD_SUCCEEDING -eq 0; fi
+
 artifacts:
   files:
-    - '**/*'  # Include all files in the artifact
+    - '**/*'
