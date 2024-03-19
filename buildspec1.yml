@@ -28,7 +28,7 @@ phases:
 
   build:
     commands:
-      - python manage.py test  # Run Django tests
+      - python3 manage.py test  # Run Django tests
       - sonar-scanner \
           -Dsonar.projectKey="$Project" \
           -Dsonar.organization="$Organization" \
