@@ -1,32 +1,24 @@
 version: 0.2
 
-env:
-  variables:
-    Project: "azharakhter555"
-    Organization: "azharakhter555"
-    HOST: "https://sonarcloud.io"
-    LOGIN: "dfb96a75ff67413791f60ca1b049976beccfaec6"
-
 phases:
   install:
     runtime-versions:
       python: 3.11
     commands:
       - pip install --upgrade pip
-      - pip install -r requirements.txt  # Install project dependencies
-      - pip install pylint  # Install pylint for static code analysis
-      # Install sonar-scanner if not found
-      - |
-        if [ ! -x "$(command -v sonar-scanner)" ]; then
-            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-            unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-            export PATH=$PATH:./sonar-scanner-cli-4.6.2.2472-linux/bin/
+      - pip install -r requirements.txt
+      - pip install pylint
+      # Check if Sonar Scanner is installed, if not, download and install it
+      - if [ ! -x "$(command -v sonar-scanner)" ]; then
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip &&
+          unzip sonar-scanner-cli-4.6.2.2472-linux.zip &&
+          export PATH=$PATH:./sonar-scanner-cli-4.6.2.2472-linux/bin/;
         fi
 
   pre_build:
     commands:
-      - python --version  # Print Python version for verification
-      - pylint $CODEBUILD_SRC_DIR/manage.py || true  # Run pylint on manage.py and ignore exit status
+      - python --version
+      - pylint $CODEBUILD_SRC_DIR/manage.py || true
 
   build:
     commands:
@@ -47,14 +39,10 @@ phases:
             echo "Error: SonarCloud login token not found."
             exit 1
         fi
-        
+
         sonar-scanner \
             -Dsonar.projectKey="$Project" \
             -Dsonar.organization="$Organization" \
             -Dsonar.host.url="$HOST" \
             -Dsonar.login="$LOGIN" \
-            -X  # Verbose output for debugging purposes
-
-artifacts:
-  files:
-    - '**/*'  # Include all files in the artifact
+            -X
