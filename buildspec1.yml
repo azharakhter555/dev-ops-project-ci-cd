@@ -1,10 +1,10 @@
 version: 0.2
 env:
   secrets-manager:
-    LOGIN: prod/sonar:Generate
-    HOST: prod/sonar:Host
-    Organization: prod/sonar:Organization
-    Project: prod/sonar:Project
+    LOGIN: prod/sonar-azhar:sonarToken
+    HOST: prod/sonar-azhar:Host
+    Organization: prod/sonar-azhar:Organization
+    Project: prod/sonar-azhar:Project
 
 phases:
   install:
