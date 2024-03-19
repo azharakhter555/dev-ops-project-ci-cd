@@ -21,13 +21,10 @@ phases:
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
       - export PATH=$PATH:./sonar-scanner-cli-4.6.2.2472-linux/bin/
 
-  pre_build:
+  build:
     commands:
       - python --version
       - pylint $CODEBUILD_SRC_DIR/manage.py || true
-
-  build:
-    commands:
       - python3 manage.py test  # Run Django tests
       - sonar-scanner \
           -Dsonar.projectKey="$Project" \
