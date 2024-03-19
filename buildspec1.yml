@@ -1,12 +1,5 @@
 version: 0.2
 
-env:
-  secrets-manager:
-    LOGIN: prod/sonar-azhar:sonarToken
-    HOST: prod/sonar-azhar:HOST
-    Organization: prod/sonar-azhar:Organization
-    Project: prod/sonar-azhar:Project
-
 phases:
   install:
     runtime-versions:
@@ -27,10 +20,10 @@ phases:
   build:
     commands:
       - sonar-scanner \
-          -Dsonar.projectKey="$Project" \
-          -Dsonar.organization="$Organization" \
-          -Dsonar.host.url="$HOST" \
-          -Dsonar.login="$LOGIN"
+          -Dsonar.organization=azharakhter556 \
+          -Dsonar.projectKey=azharakhter556_dev-ops-project \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=https://sonarcloud.io
       - sleep 5
       - curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project" > result.json
       - cat result.json
