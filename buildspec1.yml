@@ -25,7 +25,7 @@ phases:
           -Dsonar.sources=. \
           -Dsonar.host.url=https://sonarcloud.io
       - sleep 5
-      - curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project" > result.json
+      - curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter556_dev-ops-project" > result.json
       - cat result.json
       - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ]; then exit 1; fi
 
