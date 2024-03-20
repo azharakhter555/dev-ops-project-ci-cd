@@ -1,22 +1,19 @@
 version: 0.2
 
-phases:
-  install:
-    runtime-versions:
+ phases:
+   install:
+     runtime-versions:
       python: 3.11
-      java: openjdk11
+      java: corretto17  # Choose either corretto17 or corretto21
     commands:
       - apt-get update
-      - apt-get install -y openjdk-11-jdk  # Install Java 11
-      - java -version  # Verify Java version
       - apt-get install -y jq
-      - pip install --upgrade pip
-      - pip install django pylint
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-      - unzip sonar-scanner-cli-4.6.2.2472-linux.zip -d sonar-scanner
-      - chmod +x sonar-scanner/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner
-      - export PATH=$PATH:$(pwd)/sonar-scanner/sonar-scanner-4.6.2.2472-linux/bin/
-      - ls -la sonar-scanner/sonar-scanner-4.6.2.2472-linux/bin/
+      - wget http://www-eu.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
+      - tar xzf apache-maven-3.5.4-bin.tar.gz
+      - ln -s apache-maven-3.5.4 maven
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
+      - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
+      - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
 
   build:
     commands:
