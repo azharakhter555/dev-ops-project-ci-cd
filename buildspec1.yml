@@ -4,7 +4,7 @@ phases:
   install:
     runtime-versions:
       python: 3.11
-      java: corretto11
+      java: corretto17
     commands:
       - apt-get update
       - apt-get install -y jq
