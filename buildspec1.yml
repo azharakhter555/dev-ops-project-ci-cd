@@ -4,13 +4,13 @@ phases:
   install:
     runtime-versions:
       python: 3.11
-      java: corretto17  # Updated to corretto17
+      java: corretto17
     commands:
       - apt-get update
       - apt-get install -y jq
       - apt-get install -y maven  # Install Maven directly from the package manager
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-      - unzip ./sonar-scanner-cli-4.6.2.2472-linux.zip
+      - unzip sonar-scanner-cli-4.6.2.2472-linux.zip -d sonar-scanner
       - export PATH=$PATH:$(pwd)/sonar-scanner/sonar-scanner-4.6.2.2472-linux/bin/
 
   build:
