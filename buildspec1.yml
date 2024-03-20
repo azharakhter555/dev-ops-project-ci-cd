@@ -15,7 +15,7 @@ phases:
 
   build:
     commands:
-      - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto   # Set JAVA_HOME to Corretto 17 installation directory
+      - export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto   # Corrected JAVA_HOME path
       - $JAVA_HOME/bin/java -version   # Verify Java version
       - $JAVA_HOME/bin/java -jar $(pwd)/sonar-scanner-4.6.2.2472-linux/lib/sonar-scanner-cli-4.6.2.2472.jar -X -Dsonar.organization=azharakhter555 -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=af3221c9f68db16ce2ce7b5b576e5fce1da17c6c
       - sleep 5
