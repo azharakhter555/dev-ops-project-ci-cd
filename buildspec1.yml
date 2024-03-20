@@ -4,7 +4,7 @@ phases:
   install:
     runtime-versions:
       python: 3.11
-      java: openjdk8
+      java: corretto17  # Updated to corretto17
     commands:
       - yum update -y
       - yum install -y jq
