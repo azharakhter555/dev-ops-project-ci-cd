@@ -18,8 +18,8 @@ phases:
       - export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
       - $JAVA_HOME/bin/java -version
       - SONAR_SCANNER_JAR=$(find $SONAR_SCANNER_DIR -name "sonar-scanner-cli-*.jar" | head -n 1)
+      - echo "sonar.organization=azharakhter555" >> sonar-project.properties
       - $JAVA_HOME/bin/java -jar $SONAR_SCANNER_JAR -X \
-        -Dsonar.organization=azharakhter555 \
         -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd \
         -Dsonar.sources=. \
         -Dsonar.host.url=https://sonarcloud.io \
