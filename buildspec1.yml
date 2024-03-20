@@ -8,14 +8,12 @@ phases:
       - apt-get update
       - apt-get install -y jq
       - pip install --upgrade pip
-      - pip install django
-      - pip install pylint
+      - pip install django pylint
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-      - chmod +x sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner  # Adjust permissions
-      - export PATH=$PATH:$(pwd)/sonar-scanner-cli-4.6.2.2472-linux/bin/  # Adjust path
+      - chmod +x sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner
+      - export PATH=$PATH:$(pwd)/sonar-scanner-cli-4.6.2.2472-linux/bin/
       - ls -la  # List contents of the directory for debugging
-      - cd ..  # Return to the previous directory
 
   build:
     commands:
@@ -23,11 +21,12 @@ phases:
           -Dsonar.organization=azharakhter555 \
           -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd \
           -Dsonar.sources=. \
-          -Dsonar.host.url=https://sonarcloud.io
-      - sleep 5
-      - curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter556_dev-ops-project" > result.json
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.python.coverage.reportPaths=coverage.xml  # Add coverage report path if available
+      - sleep 5  # Wait for SonarCloud analysis to complete
+      - curl -o result.json "https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter556_dev-ops-project"
       - cat result.json
-      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ]; then exit 1; fi
+      - if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then exit 1; fi
 
 artifacts:
   files:
