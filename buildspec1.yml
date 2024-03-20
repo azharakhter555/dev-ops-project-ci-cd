@@ -18,7 +18,8 @@ phases:
     commands:
       - export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
       - $JAVA_HOME/bin/java -version
-      - $JAVA_HOME/bin/java -jar $SONAR_SCANNER_DIR/lib/sonar-scanner-cli-4.6.2.2472-linux.jar -X -Dsonar.organization=azharakhter555 -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=af3221c9f68db16ce2ce7b5b576e5fce1da17c6c
+      - SONAR_SCANNER_JAR=$(find $SONAR_SCANNER_DIR -name "sonar-scanner-cli-*.jar" | head -n 1)
+      - $JAVA_HOME/bin/java -jar $SONAR_SCANNER_JAR -X -Dsonar.organization=azharakhter555 -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=af3221c9f68db16ce2ce7b5b576e5fce1da17c6c
       - sleep 5
       - curl -o result.json "https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter556_dev-ops-project"
       - cat result.json
