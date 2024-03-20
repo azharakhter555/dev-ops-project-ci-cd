@@ -1,10 +1,10 @@
 version: 0.2
 
- phases:
-   install:
-     runtime-versions:
+phases:
+  install:
+    runtime-versions:
       python: 3.11
-      java: corretto17  # Choose either corretto17 or corretto21
+      java: corretto21  # Choose either corretto17 or corretto21
     commands:
       - apt-get update
       - apt-get install -y jq
