@@ -22,7 +22,8 @@ phases:
           -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd \
           -Dsonar.sources=. \
           -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.python.coverage.reportPaths=coverage.xml  # Add coverage report path if available
+          -Dsonar.login=af3221c9f68db16ce2ce7b5b576e5fce1da17c6c  # Replace with your SonarCloud token
+ # Add coverage report path if available
       - sleep 5  # Wait for SonarCloud analysis to complete
       - curl -o result.json "https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter556_dev-ops-project"
       - cat result.json
