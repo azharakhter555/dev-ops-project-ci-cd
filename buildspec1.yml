@@ -1,18 +1,12 @@
 version: 0.2
 
-env:
-  variables:
-    JAVA_HOME: "/usr/lib/jvm/java-8-openjdk-amd64"
-    PATH: "${JAVA_HOME}/bin:${PATH}"
-
 phases:
   install:
     runtime-versions:
       python: 3.11
+      java: corretto11
     commands:
       - apt-get update
-      - apt-get install -y openjdk-8-jdk  # Install Java 8
-      - java -version  # Verify Java version
       - apt-get install -y jq
       - pip install --upgrade pip
       - pip install django pylint
