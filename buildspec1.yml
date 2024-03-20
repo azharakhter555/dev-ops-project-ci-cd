@@ -6,6 +6,9 @@ phases:
       python: 3.11
     commands:
       - apt-get update
+      - apt-get install -y openjdk-10-jdk  # Install Java 10
+      - update-alternatives --set java /usr/lib/jvm/java-10-openjdk-amd64/bin/java  # Set Java 10 as default
+      - java -version  # Verify Java version
       - apt-get install -y jq
       - pip install --upgrade pip
       - pip install django pylint
