@@ -19,11 +19,8 @@ phases:
       - $JAVA_HOME/bin/java -version
       - SONAR_SCANNER_JAR=$(find $SONAR_SCANNER_DIR -name "sonar-scanner-cli-*.jar" | head -n 1)
       - echo "sonar.organization=azharakhter555" >> sonar-project.properties
-      - $JAVA_HOME/bin/java -jar $SONAR_SCANNER_JAR -X \
-        -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd \
-        -Dsonar.sources=. \
-        -Dsonar.host.url=https://sonarcloud.io \
-        -Dsonar.login=af3221c9f68db16ce2ce7b5b576e5fce1da17c6c
+      - echo "sonar.projectKey=azharakhter555_dev-ops-project-ci-cd" >> sonar-project.properties
+      - $JAVA_HOME/bin/java -jar $SONAR_SCANNER_JAR -X
       - sleep 5
       - curl -o result.json "https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter556_dev-ops-project"
       - cat result.json
