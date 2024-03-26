@@ -2,11 +2,11 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto17  # Updated runtime version
+      java: corretto17
   pre_build:
     commands:
-      - yum update -y     # Equivalent to apt-get update
-      - yum install -y jq # Install jq using yum package manager
+      - yum update -y
+      - yum install -y jq
       - retry_count=3
       - for i in $(seq 1 $retry_count); do 
           wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz && break || sleep 10; 
@@ -22,6 +22,9 @@ phases:
       - sleep 5
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd > result.json
       - cat result.json
-      - if [ $(jq -r '.projectStatus.status' result.json) = "ERROR" ]; then 
+      - if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then
+          echo "Project status is ERROR, exiting with error status."
           exit 1
+        else
+          echo "Project status is not ERROR, continuing build process."
         fi
