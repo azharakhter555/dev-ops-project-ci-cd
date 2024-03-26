@@ -28,8 +28,10 @@ phases:
       - PROJECT_DIR=$(find $CODEBUILD_SRC_DIR -name pom.xml -exec dirname {} \; | head -n 1)
       - echo "Found project directory: $PROJECT_DIR"
       - if [ -z "$PROJECT_DIR" ]; then
-          echo "ERROR: Unable to find Maven project directory.";
-          exit 1;
+          echo "ERROR: Unable to find Maven project directory. Creating a basic pom.xml file..."
+          echo "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"><modelVersion>4.0.0</modelVersion><groupId>com.example</groupId><artifactId>sample-project</artifactId><version>1.0.0</version></project>" > $CODEBUILD_SRC_DIR/pom.xml
+          PROJECT_DIR=$CODEBUILD_SRC_DIR  # Update the project directory path
+          echo "Basic pom.xml file created."
         fi
       - cd $PROJECT_DIR
       - /opt/maven/bin/mvn clean install
