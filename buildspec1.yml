@@ -7,8 +7,11 @@ phases:
     commands:
       - yum update -y     # Equivalent to apt-get update
       - yum install -y jq # Install jq using yum package manager
-      - retry_count=3
-      - for i in $(seq 1 $retry_count); do wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz && break || sleep 10; done
+      - |
+        retry_count=3
+        for i in $(seq 1 $retry_count); do 
+          wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz && break || sleep 10; 
+        done
       - tar xzf apache-maven-3.5.4-bin.tar.gz || true
       - ln -s apache-maven-3.5.4 maven
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
