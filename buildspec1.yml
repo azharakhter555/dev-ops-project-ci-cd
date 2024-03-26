@@ -19,8 +19,8 @@ phases:
 
   build:
     commands:
-      - find / -name pom.xml -exec mv {} ./pom.xml \; || true  # Move all pom.xml files to root
-      - mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
+      - mvn clean install -DskipTests  # Build your project (replace with your actual build command)
+      - /sonar-scanner/bin/sonar-scanner -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.organization=azharakhter555 || true
       - sleep 5
       # Check the HTTP response status code directly
       - if curl -s -o /dev/null -w "%{http_code}" https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd != "200"; then exit 1; fi
