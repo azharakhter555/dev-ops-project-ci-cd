@@ -20,4 +20,6 @@ phases:
       - sleep 5
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd > result.json
       - cat result.json
-      - if [ $(jq -r '.projectStatus.status' result.json || echo "ERROR") = ERROR ]; then exit 1; fi
+      - project_status=$(jq -r '.projectStatus.status' result.json || echo "ERROR")
+      - echo "Project status: $project_status"
+      - if [ "$project_status" = "ERROR" ]; then exit 1; fi
