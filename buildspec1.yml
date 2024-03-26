@@ -19,7 +19,8 @@ phases:
       - export PATH=$PATH:$CODEBUILD_SRC_DIR/sonar-scanner-3.3.0.1492-linux/bin/
   build:
     commands:
-      - $CODEBUILD_SRC_DIR/maven/bin/mvn clean install  # Example Maven build command, replace with your actual build command
+      - cd $CODEBUILD_SRC_DIR/your-maven-project-directory  # Change to your Maven project directory
+      - $CODEBUILD_SRC_DIR/maven/bin/mvn clean install
       - $CODEBUILD_SRC_DIR/maven/bin/mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
       - sleep 5
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd > $CODEBUILD_SRC_DIR/result.json
