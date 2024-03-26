@@ -22,6 +22,6 @@ phases:
       - find / -name pom.xml -exec mv {} ./pom.xml \; || true  # Move all pom.xml files to root
       - mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
       - sleep 5
-      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd > result.json
-      - cat result.json
-      - if [ $(jq -r '.projectStatus.status' result.json || echo "ERROR") = ERROR ]; then exit 1; fi
+      - STATUS=$(curl -s https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd | jq -r '.projectStatus.status')
+      - echo "Project status: $STATUS"
+      - if [ "$STATUS" = "ERROR" ]; then exit 1; fi
