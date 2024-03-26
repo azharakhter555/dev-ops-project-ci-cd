@@ -3,6 +3,11 @@ phases:
   install:
     runtime-versions:
       java: corretto17
+    commands:
+      - cd /opt  # Install Maven in the /opt directory
+      - wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
+      - tar xzf apache-maven-3.5.4-bin.tar.gz
+      - ln -s /opt/apache-maven-3.5.4 /opt/maven
   pre_build:
     commands:
       - cd $CODEBUILD_SRC_DIR  # Navigate to the directory containing the source code
@@ -10,21 +15,18 @@ phases:
       - yum install -y jq
       - retry_count=3
       - for i in $(seq 1 $retry_count); do 
-          wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz && break || sleep 10; 
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip && break || sleep 10; 
         done
-      - tar xzf apache-maven-3.5.4-bin.tar.gz || true
-      - ln -s $CODEBUILD_SRC_DIR/apache-maven-3.5.4 $CODEBUILD_SRC_DIR/maven
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
       - unzip $CODEBUILD_SRC_DIR/sonar-scanner-cli-3.3.0.1492-linux.zip -d $CODEBUILD_SRC_DIR
       - export PATH=$PATH:$CODEBUILD_SRC_DIR/sonar-scanner-3.3.0.1492-linux/bin/
 
   build:
     commands:
-      # Find the Maven project directory recursively
-      - PROJECT_DIR=$(find . -name pom.xml -exec dirname {} \; | head -n 1)
+      # Find the Maven project directory recursively within the source code directory
+      - PROJECT_DIR=$(find $CODEBUILD_SRC_DIR -name pom.xml -exec dirname {} \; | head -n 1)
       - cd $PROJECT_DIR
-      - $CODEBUILD_SRC_DIR/maven/bin/mvn clean install
-      - $CODEBUILD_SRC_DIR/maven/bin/mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
+      - /opt/maven/bin/mvn clean install
+      - /opt/maven/bin/mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
       - sleep 5
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd > $CODEBUILD_SRC_DIR/result.json
       - cat $CODEBUILD_SRC_DIR/result.json
