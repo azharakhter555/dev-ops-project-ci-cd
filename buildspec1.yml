@@ -21,8 +21,9 @@ phases:
     commands:
       - mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
       - sleep 5
-      - retry_count=3
-      - for i in $(seq 1 $retry_count); do 
+      - |
+        retry_count=3
+        for i in $(seq 1 $retry_count); do 
           curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd > result.json && break || sleep 10; 
         done
       - cat result.json
