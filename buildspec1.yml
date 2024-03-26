@@ -14,8 +14,8 @@ phases:
       - cd $CODEBUILD_SRC_DIR
       - yum update -y
       - yum install -y jq
-      - retry_count: 3  # Corrected syntax for shell script
       - |
+        retry_count=3  # Corrected syntax for shell script
         for i in $(seq 1 $retry_count); do
           wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip && break || sleep 10;
         done
@@ -30,8 +30,8 @@ phases:
       - echo "Found project directory: $PROJECT_DIR"
       - |
         if [ -z "$PROJECT_DIR" ]; then
-          echo "ERROR: Unable to find Maven project directory.";
-          exit 1;
+          echo "ERROR: Unable to find Maven project directory."
+          exit 1
         fi
       - cd $PROJECT_DIR
       - /opt/maven/bin/mvn clean install
