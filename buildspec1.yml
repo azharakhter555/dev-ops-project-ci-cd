@@ -5,6 +5,7 @@ phases:
       java: corretto17
   pre_build:
     commands:
+      - cd $CODEBUILD_SRC_DIR  # Navigate to the directory containing the source code
       - yum update -y
       - yum install -y jq
       - retry_count=3
@@ -12,17 +13,18 @@ phases:
           wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz && break || sleep 10; 
         done
       - tar xzf apache-maven-3.5.4-bin.tar.gz || true
-      - ln -s apache-maven-3.5.4 maven
+      - ln -s $CODEBUILD_SRC_DIR/apache-maven-3.5.4 $CODEBUILD_SRC_DIR/maven
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
-      - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
-      - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
+      - unzip $CODEBUILD_SRC_DIR/sonar-scanner-cli-3.3.0.1492-linux.zip -d $CODEBUILD_SRC_DIR
+      - export PATH=$PATH:$CODEBUILD_SRC_DIR/sonar-scanner-3.3.0.1492-linux/bin/
   build:
     commands:
-      - mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
+      - $CODEBUILD_SRC_DIR/maven/bin/mvn clean install  # Example Maven build command, replace with your actual build command
+      - $CODEBUILD_SRC_DIR/maven/bin/mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
       - sleep 5
-      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd > result.json
-      - cat result.json
-      - if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then
+      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd > $CODEBUILD_SRC_DIR/result.json
+      - cat $CODEBUILD_SRC_DIR/result.json
+      - if [ "$(jq -r '.projectStatus.status' $CODEBUILD_SRC_DIR/result.json)" = "ERROR" ]; then
           echo "Project status is ERROR, exiting with error status."
           exit 1
         else
