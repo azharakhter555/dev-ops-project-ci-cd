@@ -25,6 +25,10 @@ phases:
     commands:
       # Find the Maven project directory recursively within the source code directory
       - PROJECT_DIR=$(find $CODEBUILD_SRC_DIR -name pom.xml -exec dirname {} \; | head -n 1)
+      - if [ -z "$PROJECT_DIR" ]; then
+          echo "ERROR: Unable to find Maven project directory.";
+          exit 1;
+        fi
       - cd $PROJECT_DIR
       - /opt/maven/bin/mvn clean install
       - /opt/maven/bin/mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
