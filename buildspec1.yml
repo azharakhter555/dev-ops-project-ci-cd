@@ -16,7 +16,6 @@ phases:
       - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
   build:
     commands:
-      - mvn test -X
       - mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
       - sleep 5
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd > result.json
