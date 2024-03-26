@@ -4,34 +4,31 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - cd /opt  # Install Maven in the /opt directory
+      - cd /opt
       - wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
       - tar xzf apache-maven-3.5.4-bin.tar.gz
       - ln -s /opt/apache-maven-3.5.4 /opt/maven
 
   pre_build:
     commands:
-      - cd $CODEBUILD_SRC_DIR  # Navigate to the directory containing the source code
+      - cd $CODEBUILD_SRC_DIR
       - yum update -y
       - yum install -y jq
       - retry_count=3
-      - for i in $(seq 1 $retry_count); do 
-          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip && break || sleep 10; 
+      - for i in $(seq 1 $retry_count); do
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip && break || sleep 10;
         done
       - unzip $CODEBUILD_SRC_DIR/sonar-scanner-cli-3.3.0.1492-linux.zip -d $CODEBUILD_SRC_DIR
       - export PATH=$PATH:$CODEBUILD_SRC_DIR/sonar-scanner-3.3.0.1492-linux/bin/
 
   build:
     commands:
-      # Find the Maven project directory recursively within the source code directory
       - echo "Searching for pom.xml files in directory: $CODEBUILD_SRC_DIR"
       - PROJECT_DIR=$(find $CODEBUILD_SRC_DIR -name pom.xml -exec dirname {} \; | head -n 1)
       - echo "Found project directory: $PROJECT_DIR"
       - if [ -z "$PROJECT_DIR" ]; then
-          echo "ERROR: Unable to find Maven project directory. Creating a basic pom.xml file..."
-          echo "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"><modelVersion>4.0.0</modelVersion><groupId>com.example</groupId><artifactId>sample-project</artifactId><version>1.0.0</version></project>" > $CODEBUILD_SRC_DIR/pom.xml
-          PROJECT_DIR=$CODEBUILD_SRC_DIR  # Update the project directory path
-          echo "Basic pom.xml file created."
+          echo "ERROR: Unable to find Maven project directory.";
+          exit 1;
         fi
       - cd $PROJECT_DIR
       - /opt/maven/bin/mvn clean install
