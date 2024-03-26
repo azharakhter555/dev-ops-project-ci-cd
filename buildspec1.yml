@@ -1,40 +1,29 @@
 version: 0.2
 env:
   secrets-manager:
-    LOGIN: 84bb19120d7897d3d0486f065713371d11329eea
-    HOST: https://sonarcloud.io
-    Organization: azharakhter555
-    Project: azharakhter555_dev-ops-project-ci-cd
+    LOGIN: prod1/sonar:sonarToken
+    HOST: prod1/sonar:HOST
+    Organization: prod1/sonar:Organization
+    Project: prod1/sonar:Project
 phases:
   install:
     runtime-versions:
       java: openjdk8
   pre_build:
     commands:
-      - echo "Updating package repositories..."
       - apt-get update
-      - echo "Installing jq..."
       - apt-get install -y jq
-      - echo "Downloading Apache Maven..."
       - wget http://www-eu.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
-      - echo "Extracting Apache Maven..."
       - tar xzf apache-maven-3.5.4-bin.tar.gz
       - ln -s apache-maven-3.5.4 maven
-      - echo "Downloading SonarScanner..."
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
-      - echo "Extracting SonarScanner..."
       - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
       - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
   build:
     commands:
-      - echo "Running Maven tests..."
       - mvn test     
-      - echo "Running SonarScanner analysis..."
       - mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
-      - echo "Waiting for SonarCloud analysis results..."
       - sleep 5
-      - echo "Fetching project status from SonarCloud..."
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project >result.json
       - cat result.json
-      - echo "Checking project status..."
-      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ;fi 
+      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ;fi
