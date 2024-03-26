@@ -14,13 +14,13 @@ phases:
       - cd $CODEBUILD_SRC_DIR
       - yum update -y
       - yum install -y jq
+      - retry_count=3
       - |
-        retry_count=3
         for i in $(seq 1 $retry_count); do
-          wget -O sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip && break || sleep 10;
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip && break || sleep 10;
         done
-      - unzip sonar-scanner-cli.zip
-      - export PATH=$PATH:$CODEBUILD_SRC_DIR/sonar-scanner-3.3.0.1492-linux/bin/
+      - unzip sonar-scanner-cli-3.3.0.1492-linux.zip -d .
+      - export PATH=$PATH:$PWD/sonar-scanner-3.3.0.1492-linux/bin/
 
   build:
     commands:
@@ -38,7 +38,7 @@ phases:
       - /opt/maven/bin/mvn clean install
       - /opt/maven/bin/mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
       - sleep 5
-      - curl -o result.json https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd
+      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd > result.json
       - cat result.json
       - |
         if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then
