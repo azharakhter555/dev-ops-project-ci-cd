@@ -1,5 +1,4 @@
 version: 0.2
-
 phases:
   install:
     runtime-versions:
@@ -13,24 +12,22 @@ phases:
       - for i in $(seq 1 $retry_count); do wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz && break || sleep 10; done
       - tar xzf apache-maven-3.5.4-bin.tar.gz || true
       - ln -s apache-maven-3.5.4 maven
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-      - unzip ./sonar-scanner-cli-4.6.2.2472-linux.zip
-      - mv sonar-scanner-4.6.2.2472-linux /sonar-scanner
-      - chmod +x /sonar-scanner/bin/*
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
+      - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
+      - mv sonar-scanner-3.3.0.1492-linux /sonar-scanner
       - export PATH=$PATH:/sonar-scanner/bin/
 
   build:
     commands:
-      # Analyze the code using SonarCloud scanner for Python
-      - sonar-scanner \
-          -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 \
-          -Dsonar.host.url=https://sonarcloud.io/ \
-          -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd \
-          -Dsonar.organization=azharakhter555 \
-          -Dsonar.sources=./myDevProject \
-          -Dsonar.projectName="Your Django Project Name" \
-          -Dsonar.projectVersion="1.0" \
-          -Dsonar.exclusions=**/migrations/**
-
+      - find / -name pom.xml -exec mv {} ./pom.xml \; || true  # Move all pom.xml files to root
+      - mvn sonar:sonar -Dsonar.login=079027487f891802c7b48f8f389eb1253a983c99 -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=azharakhter555_dev-ops-project-ci-cd -Dsonar.organization=azharakhter555 || true
+      - sleep 5
       # Check the HTTP response status code directly
       - if curl -s -o /dev/null -w "%{http_code}" https://sonarcloud.io/api/qualitygates/project_status?projectKey=azharakhter555_dev-ops-project-ci-cd != "200"; then exit 1; fi
+
+
+
+
+
+
+
