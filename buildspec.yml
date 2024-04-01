@@ -6,14 +6,14 @@ phases:
       python: 3.11
     commands:
       - pip install --upgrade pip
-      - pip install -r requirements.txt  # Install project dependencies
-      - pip install pylint  # Install pylint for static code analysis
+      - pip install -r requirements.txt  
+      - pip install pylint  
 
   pre_build:
     commands:
-      - python --version  # Print Python version for verification
-      - pylint $CODEBUILD_SRC_DIR/manage.py || true  # Run pylint on manage.py and ignore exit status
+      - python --version  
+      - pylint $CODEBUILD_SRC_DIR/manage.py || true 
 
 artifacts:
   files:
-    - '**/*'  # Include all files in the artifact
+    - '**/*' 
